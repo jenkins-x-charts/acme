@@ -3,12 +3,31 @@ jxRequirements:
     projectID: ""
     provider: ""
     region: ""
-  ingress:
-    domain: ""
-    externalDNS: false
-    namespaceSubDomain: -jx.
-    tls:
-      email: ""
-      enabled: true
-      production: true
-      secretName: ""
+  environments:
+  - ingress:
+      domain: ""
+      externalDNS: false
+      namespaceSubDomain: "-jx."
+      tls:
+        email: ""
+        enabled: true
+        production: false
+    key: dev
+  - ingress:
+      domain: ""
+      externalDNS: false
+      namespaceSubDomain: ""
+      tls:
+        email: ""
+        enabled: true
+        production: false
+    key: staging
+  - ingress:
+      domain: ""
+      externalDNS: false
+      namespaceSubDomain: ""
+      tls:
+        email: ""
+        enabled: true
+        production: true
+    key: production

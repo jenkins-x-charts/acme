@@ -1,17 +1,18 @@
-{{- if .Values.jxRequirements.ingress.domain }}
-{{- if .Values.jxRequirements.ingress.tls.production }}
+{{- $environments := .Values.jxRequirements.environments }}
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: "tls-{{ .Values.jxRequirements.ingress.domain | replace "." "-" }}-p"
+  {{- range $environments }}
+  {{- if and .ingress.tls.enabled .ingress.domain .ingress.tls.production }}
+  name: "tls-{{ .ingress.domain | replace "." "-" }}-p"
   labels:
     jenkins.io/letsencrypt-service: production
 spec:
-  secretName: "tls-{{ .Values.jxRequirements.ingress.domain | replace "." "-" }}-p"
+  secretName: "tls-{{ .ingress.domain | replace "." "-" }}-p"
   issuerRef:
     name: letsencrypt-prod
-  commonName: "*.{{ .Values.jxRequirements.ingress.domain }}"
+  commonName: "*.{{ .ingress.domain }}"
   dnsNames:
-  - "*.{{ .Values.jxRequirements.ingress.domain }}"
-{{- end }}
-{{- end }}
+  - "*.{{ .ingress.domain }}"
+  {{- end }}
+  {{- end }}

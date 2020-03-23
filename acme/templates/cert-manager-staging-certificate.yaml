@@ -1,17 +1,18 @@
-{{- if .Values.jxRequirements.ingress.tls.enabled }}
-{{- if not .Values.jxRequirements.ingress.tls.production }}
+{{- $environments := .Values.jxRequirements.environemnts }}
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: "tls-{{ .Values.jxRequirements.ingress.domain | replace "." "-" }}-s"
+  {{- range $environments }}
+  {{- if and .ingress.tls.enabled .ingress.domain (not .ingress.tls.production) }}
+  name: "tls-{{ .ingress.domain | replace "." "-" }}-s"
   labels:
     jenkins.io/letsencrypt-service: staging
 spec:
-  secretName: "tls-{{ .Values.jxRequirements.ingress.domain | replace "." "-" }}-s"
+  secretName: "tls-{{ .ingress.domain | replace "." "-" }}-s"
   issuerRef:
     name: letsencrypt-staging
-  commonName: "*.{{ .Values.jxRequirements.ingress.domain }}"
+  commonName: "*.{{ .ingress.domain }}"
   dnsNames:
-  - "*.{{ .Values.jxRequirements.ingress.domain }}"
-{{- end }}
-{{- end }}
+  - "*.{{ .ingress.domain }}"
+  {{- end }}
+  {{- end }}

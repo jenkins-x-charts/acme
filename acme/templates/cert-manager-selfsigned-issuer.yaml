@@ -1,0 +1,11 @@
+{{- $environments := .Values.jxRequirements.environments }}
+{{- range $environments }}
+{{- if and .ingress.tls.enabled (not .ingress.domain) (not .ingress.tls.production) }}
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: selfsigned
+spec:
+  selfSigned: {}
+{{- end }}
+{{- end }}
